@@ -1,34 +1,51 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const { authRoutes, protect, allowRoles, connectDB } = require('./index');
+const express = require("express");
+const dotenv = require("dotenv");
+const {
+  generateToken,
+  generateRefreshToken,
+  protect,
+  roleCheck,
+} = require("./index"); 
 
-//Load env variables
 dotenv.config();
 
-//Connect your Database
-connectDB();
-
-//Express initialization
 const app = express();
 app.use(express.json());
 
-//Auth routes
-app.use('/api/auth',authRoutes);
-
-
-// Protected Test Routes
-app.get('/api/protected/public', (req, res) => {
-  res.json({ message: 'This route is public' });
-});
-
-app.get('/api/protected/user', protect, (req, res) => {
-  res.json({ message: `Welcome ${req.user.name}, you are authenticated` });
-});
-
-app.get('/api/protected/admin', protect, allowRoles(['admin']), (req, res) => {
-  res.json({ message: 'Welcome Admin!' });
-});
-
-// Start the server
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET=process.env.JWT_REFRESH_SECRET;
+
+// Login route
+app.post("/login", (req, res) => {
+  const { id, role } = req.body;
+
+  if (!id || !role) {
+    return res.status(400).json({ message: "Please provide id and role" });
+  }
+
+  const accessToken = generateToken({ id, role }, JWT_SECRET, "30s");
+  const refreshToken = generateRefreshToken({ id, role }, JWT_REFRESH_SECRET, "1m");
+
+  res.json({ accessToken, refreshToken });
+});
+
+
+// Protected routes
+app.get("/protected", protect(JWT_SECRET), (req, res) => {
+  res.json({ message: "Access granted to protected route", user: req.user });
+});
+
+// Role-based route access
+app.get(
+  "/admin-only",
+  protect(JWT_SECRET),
+  roleCheck(["admin"]),
+  (req, res) => {
+    res.json({ message: "Welcome Admin", user: req.user });
+  }
+);
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

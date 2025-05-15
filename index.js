@@ -1,11 +1,13 @@
-const authRoutes = require('./routes/authRoutes');
-const protect = require('./middleware/authMiddleware');
-const allowRoles = require('./middleware/roleMiddleware');
-const connectDB = require('./config/db');
+const generateToken = require("./utils/generateToken");
+const generateRefreshToken = require('./utils/generateRefreshToken');
+const verifyToken = require("./utils/verifyToken");
+const protect = require("./middleware/authMiddleware");
+const roleCheck = require("./middleware/roleMiddleware");
 
 module.exports = {
-  authRoutes,
+  generateToken,
+  generateRefreshToken,
+  verifyToken,
   protect,
-  allowRoles,
-  connectDB
+  roleCheck,
 };

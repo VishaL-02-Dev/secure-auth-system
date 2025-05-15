@@ -1,12 +1,12 @@
-const allowRoles = (...roles)=>{
+const roleCheck = (allowedRoles = [])=>{
     return (req,res,next)=>{
-        if(!roles.includes(req.user.role)){
+        if(!req.user||!allowedRoles.includes(req.user.role)){
             return res.status(403).json({
-                message:"Access denied. Role insuffiecient."
+                message:"Access denied."
             });
         }
         next();
     };
 };
 
-module.exports = allowRoles;
+module.exports = roleCheck;
