@@ -1,4 +1,4 @@
-# 🔐 secure-auth-system
+# 🔐 Secure-Auth-System
 
 A simple and modular JWT-based **authentication and authorization middleware system** for Node.js & Express apps. Built to be reusable across any kind of project, whether you're building an API, admin panel, or e-commerce app.
 
