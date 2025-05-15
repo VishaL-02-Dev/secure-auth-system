@@ -6,13 +6,21 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["auth", "jwt", "nodejs", "express", "middleware", "mongodb"],
+  "keywords": [
+    "auth",
+    "jwt",
+    "nodejs",
+    "express",
+    "middleware",
+    "mongodb"
+  ],
   "author": "Vishal Vinod",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "gitignore": "^0.7.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.3",
     "nodemon": "^3.1.10"
